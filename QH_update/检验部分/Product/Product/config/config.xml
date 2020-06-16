@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<snowonehour>
+    <mirrorSnow id="000">
+		<elements>FRT_CHN_0P05_3HOR-PRE,HOR-RHU,HOR-TEM</elements>
+		<subdirs>//ANALYSIS//CMPA//0P05,//ANALYSIS//CLDAS/V2/0P05,//ANALYSIS//CLDAS/V2/0P05</subdirs>
+        <localdir>/home/cqkj/QHTraffic/Data/mirror/rain/,/home/cqkj/QHTraffic/Data/mirror/rh/,/home/cqkj/QHTraffic/Data/mirror/tem/</localdir>
+        <modelpath>/home/cqkj/QHTraffic/Product/Product/Source/hliverain.pkl</modelpath>
+        <freq>24003</freq>
+		<ftp_url>ftp://10.1.72.215</ftp_url>
+		<user>bexn</user>
+		<password>BEXN111</password>
+    </mirrorSnow>
+
+    <mirrorRoadic id="001">
+
+    </mirrorRoadic>
+
+</snowonehour>

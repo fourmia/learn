@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<forest>
+    <predictpath id="000">
+        <snowpath>/home/cqkj/QHTraffic/Data/Snow/</snowpath>
+        <greentpath>/home/cqkj/QHTraffic/Product/Product/Source/green.nc</greentpath>
+        <forestpath>/home/cqkj/QHTraffic/Product/Product/Source/forgest.nc</forestpath>
+        <eightrain>/home/cqkj/QHTraffic/Product/Product/Source/historyrain.pkl</eightrain>
+        <gribpath>/home/cqkj/QHTraffic/Data/forest//</gribpath>
+    </predictpath>
+
+    <mirror id="001">
+		<elements>EDA10,ERH,TMP,ER24</elements>
+		<subdirs>\\SPCC\\BEXN,\\SPCC\\BEXN,\\SPCC\\BEXN,\\SCMOC\\BEXN</subdirs>
+        <localdir>/home/cqkj/QHTraffic/Data/mirror//</localdir>
+		<historydir>/home/cqkj/QHTraffic/Product/config/historyrain.pkl</historydir>
+		<freq>24003</freq>
+		<ftp_url>ftp://10.1.72.215</ftp_url>
+		<user>bexn</user>
+		<password>BEXN111</password>
+    </mirror>
+
+	<mirrorpath id="002">
+		<!-->path为雨、雪、风、道路结冰预报文件路径<-->
+		<rainpath>/home/cqkj/QHTraffic/Data/rain/</rainpath>
+		<snowpath>/home/cqkj/QHTraffic/Data/snow/</snowpath>
+        <windpath>/home/cqkj/QHTraffic/Data/wind/</windpath>
+        <roadicpath>/home/cqkj/QHTraffic/Product/Product/Source/road.pkl</roadicpath>
+        <savepath>/home/cqkj/QHTraffic/Data/index/fspoint//</savepath>
+		<elements>ECMWF_HR/TMP_2M,ECMWF_HR/RAIN03,ECMWF_HR/SKINT,ECMWF_HR/RH/1000,ECMWF_HR/SNOD</elements>
+	</mirrorpath>
+</forest>

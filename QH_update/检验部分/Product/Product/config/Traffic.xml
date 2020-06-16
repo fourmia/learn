@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Traffic>
+    <snow id="000">
+        <m1path>/home/cqkj/QHTraffic/Product/Product/Source/snowmodel.pkl</m1path>
+        <m2path>/home/cqkj/QHTraffic/Product/Product/Source/snow.pickle</m2path>
+        <roadpath>/home/cqkj/QHTraffic/Product/Product/Source/road.pkl</roadpath>
+        <gribpath>/home/cqkj/QHTraffic/Data/Snow/</gribpath>
+        <indexpath>/home/cqkj/QHTraffic/Data/Index/snow/</indexpath>
+        <elements>ECMWF_HR/TMP_2M,ECMWF_HR/RAIN03,ECMWF_HR/SKINT,ECMWF_HR/RH/1000,ECMWF_HR/SNOD</elements>
+    </snow>
+
+    <rain id="001">
+        <mdpath>/home/cqkj/QHTraffic/Product/Product/Source/rain.pkl</mdpath>
+        <gcpath>/home/cqkj/QHTraffic/Product/Product/Source/gcdata.csv</gcpath>
+        <savepath>/home/cqkj/QHTraffic/Data/Rain/</savepath>
+        <element>ER,/home/cqkj/QHTraffic/Data/mirrorfile/rain/,24003</element><!-->后续需在程序中采用split划分<-->
+		<ftp>ftp://10.1.72.215,bexn,BEXN111</ftp>
+    </rain>
+
+    <wind id="002">
+        <mdpath>/home/cqkj/QHTraffic/Product/Product/Source/net.pkl</mdpath>
+        <roadpath>/home/cqkj/QH/Source/eightroad.csv</roadpath>
+		<gcpath>/home/cqkj/QHTraffic/Product/Product/Source/gcdata.csv</gcpath>
+		<gribpath>/home/cqkj/QHTraffic/Data/Wind//</gribpath>
+		<indexpath>/home/cqkj/QHTraffic/Data/index/crosswind//</indexpath>
+        <elements>EDA10,/home/cqkj/QHTraffic/Data/mirrorfile/Wind/,24003</elements>
+        <ftp>ftp://10.1.72.215,bexn,BEXN111</ftp>
+    </wind>
+
+    <skint id="003">
+        <maxpath>/home/cqkj/QHTraffic/Product//Product/Source/maxgstlin.pkl</maxpath>
+        <minpath>/home/cqkj/QHTraffic/Product//Product/Source/mingstlin.pkl</minpath>
+        <gribpath>/home/cqkj/QHTraffic/Data/Skint//</gribpath>
+        <ecmwf>ECMWF_HR/TMP_2M,ECMWF_HR/RH/1000,ECMWF_HR/APCP,ECMWF_HR/SKINT</ecmwf>
+        <interfaceId>getSurfEleInRegionByTimeRange</interfaceId>
+        <elements>Station_Id_C,Lat,Lon,GST,GST_Max,GST_Min,Year,Mon,Day,Hour</elements>
+    </skint>
+
+    <icing id="004">
+        <mdpath>/home/cqkj/QHTraffic/Product/Product/Source/icesvrmodel.pickle</mdpath>
+		<roadpath>/home/cqkj/QHTraffic/Product/Product/Source/road.pkl</roadpath>
+		<gribpath>/home/cqkj/QHTraffic/Data/Roadic//</gribpath>
+		<indexpath>/home/cqkj/QHTraffic/Data/index/roadicindex//</indexpath>
+    </icing>
+
+    <flood id="005">
+        <indexpath>/home/cqkj/QHTraffic/Data/index/revisenc//</indexpath>
+        <elements>ER03,/home/cqkj/QHTraffic/Data/mirrorfile/rain/,24003</elements>
+        <ftp>ftp://10.1.72.215,bexn,BEXN111</ftp>
+    </flood>
+
+    <end id="006">
+        <Windex>/home/cqkj/QHTraffic/Data/index/crosswind//</Windex>
+        <icindex>/home/cqkj/QHTraffic/Data/index/roadicindex//</icindex>
+        <floodpath>/home/cqkj/QHTraffic/Data/index/revisenc//</floodpath>
+        <trafficpath>/home/cqkj/QHTraffic/Data/index/traffic//</trafficpath>
+    </end>
+</Traffic>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<预报>
+	<path id="000">
+		<region>89.29,31.39,102.96,39.41</region>
+		<res>0.01</res>
+	</path>
+
+	<fpath id="001">
+		<m1path>../Source/snowmodel.pkl</m1path>
+		<m2path>../Source/nomodisnow.pkl</m2path>
+        <savepath>/home/cqkj/QHTraffic/Data/Snow/</savepath>
+        <roadpath>../Source/road.pkl</roadpath>
+        <indexpath>/home/cqkj/QHTraffic/Data/Index/snow/</indexpath>
+	</fpath>
+
+	<ecmwf id="001">
+		<elements>ECMWF_HR/TMP_2M,ECMWF_HR/RAIN03,ECMWF_HR/SKINT,ECMWF_HR/RH/1000,ECMWF_HR/SNOD </elements>
+	</ecmwf>
+</预报>

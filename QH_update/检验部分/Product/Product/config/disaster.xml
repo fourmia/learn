@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<预报>
+	<path id="000">
+		<region>89.29,31.39,102.96,39.41</region>
+		<res>0.01</res>
+	</path>
+
+	<fpath id="001">
+		<!-->path为雨、雪、风、道路结冰预报文件路径<-->
+		<rainpath>../Source/snowmodel.pkl</rainpath>
+		<snowpath>../Source/nomodisnow.pkl</snowpath>
+        <windpath>/home/cqkj/QHTraffic/Data/Snow/</windpath>
+        <roadicpath>../Source/road.pkl</roadicpath>
+        <savepath>/home/cqkj/QHTraffic/Data/Index/snow/</savepath>
+	</fpath>
+
+	<ecmwf id="001">
+		<elements>ECMWF_HR/TMP_2M,ECMWF_HR/RAIN03,ECMWF_HR/SKINT,ECMWF_HR/RH/1000,ECMWF_HR/SNOD </elements>
+	</ecmwf>
+</预报>
