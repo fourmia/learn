@@ -11,7 +11,6 @@ class Roadic(object):
         self._path = glovar.trafficpath
         self.mpath = Writefile.readxml(self._path, 4)[0]
         self.roadpath = glovar.roadpath
-
     def icegrid(self, dataset, lat, lon):
         with open(self.mpath, 'rb')as f:
             model = pickle.load(f)
@@ -21,7 +20,6 @@ class Roadic(object):
         icegrid = np.nan_to_num(prediction)
         icegrid[icegrid < 0] = 0
         return icegrid
-
     def depth2onezero(self, icegrid, lat, lon):
         roadmes = pd.read_csv(self.roadpath)
         station_lat, station_lon = roadmes.lat, roadmes.lon
@@ -93,7 +91,7 @@ def iceData():
     ectime = ecmwf.ecreptime()
     fh = [i for i in range(12, 181, 3)]    # 20点的预报获取今天8:00的ec预报
     *_, dics = Writefile.readxml(glovar.trafficpath, 4)
-    dicslist = dics.split(',')[:-1]
+    dicslist = dics.split(',')
     lonlatset, dataset = [], []
     for dic in dicslist:
         newdata = []
