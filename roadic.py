@@ -92,7 +92,7 @@ def iceData():
     # 获取ec数据信息(气温、降水、地温、湿度、积雪深度)
     ectime = ecmwf.ecreptime()
     fh = [i for i in range(12, 181, 3)]    # 20点的预报获取今天8:00的ec预报
-    *_, dics = Writefile.readxml(glovar.trafficpath, 4)[2]
+    *_, dics = Writefile.readxml(glovar.trafficpath, 4)[3]
     dicslist = dics.split(',')[:-1]
     lonlatset, dataset = [], []
     for dic in dicslist:
