@@ -121,8 +121,9 @@ def main():
     cmissdata = np.loadtxt('/home/cqkj/project/industry/Product/Product/Source/cmsk.csv', delimiter=',')
     icedays = RoadIceindex(cmissdata, iceroad)
     roadicing = icedays.iceday()
-    write(indexpath, roadicing, 'RoadicIndex', type=1)
+    res = roadicing.T
+    write(indexpath, res, 'icigindex', type=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__'
     main()
