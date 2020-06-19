@@ -148,7 +148,7 @@ def main():
     data, *_ = Weatherdata(glovar.forestpath)   # ??????????
     ldtype = landtype(gpath, fpath)
     gindex, findex, mindex = firelevel(data, rainpath, snow, ldtype)  # ???????????
-    filetime = ecmwf.ecreptime()
+    filetime = glovar.filetime
     fh = range(10)
     fnames = ['_%03d' % i for i in fh]
     Writefile.write_to_nc_fire(gspath, gindex, name='green',lat=glovar.lat, lon=glovar.lon, filetime=filetime, fnames=fnames, 
