@@ -115,12 +115,12 @@ def main():
     dataset = iceData()
     ice = Roadic()
     icgrid = ice.icegrid(dataset, glovar.lat, glovar.lon)
-    savepath, indexpath = Writefile.readxml(glovar.trafficpath, 4)[2:]
+    savepath, indexpath = Writefile.readxml(glovar.trafficpath, 4)[2:]        # 此处需进行修改，根据路径
     write(savepath, icgrid, 'IceDepth', glovar.lat, glovar.lon)               # 先保存厚度网格数据
-    iceroad = ice.depth2onezero(icgrid, glovar.lat, glovar.lon)
+    iceroad = ice.depth2onezero(icgrid, glovar.lat, glovar.lon
     ################################################################################
-    # 获取cimiss数据集,此处仅为读取，实况数据获取及保存由另一程序实现
-    cmissdata = np.loadtxt('/home/cqkj/QHTraffic/qhroadic/cmsk.csv', delimiter=',')
+    # 获取cimiss数据集
+    cmissdata = np.loadtxt('/home/cqkj/project/industry/Product/Product/Source/cmsk.csv', delimiter=',')
     icedays = RoadIceindex(cmissdata, iceroad)
     roadicing = icedays.iceday()
     write(indexpath, roadicing, 'RoadicIndex', type=1)
