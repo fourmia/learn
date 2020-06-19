@@ -151,13 +151,13 @@ def main():
     filetime = glovar.filetime
     fh = range(10)
     fnames = ['_%03d' % i for i in fh]
-    Writefile.write_to_nc_fire(gspath, gindex, name='green',lat=glovar.lat, lon=glovar.lon, filetime=filetime, fnames=fnames, 
+    Writefile.write_to_nc_fire(gspath, gindex, name='greenfire',lat=glovar.lat, lon=glovar.lon, filetime=filetime, fnames=fnames, 
                           elename=None,nums=1)
-    Writefile.write_to_nc_fire(fspath, findex, name='forest', filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
+    Writefile.write_to_nc_fire(fspath, findex, name='forestfire', filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
                           elename=None, nums=1)
 
     Writefile.write_to_nc_fire(mspath, mindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='meteo', elename='risk', nums=1)
+                          name='meteorological', elename='risk', nums=1)
 if __name__ == '__main__':
     main()
 
