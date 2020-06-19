@@ -21,12 +21,12 @@ class Roadic(object):
         icegrid[icegrid < 0] = 0
         return icegrid
     def depth2onezero(self, icegrid, lat, lon):
-        roadmes = pd.read_csv(self.roadpath)
-        station_lat, station_lon = roadmes.lat, roadmes.lon
+        roadmes = pd.read_csv(self.roadpath,indexcol=0)
+        station_lat, station_lon = roadmes.Lat, roadmes.Lon
         icegrid = np.where(icegrid > 0.05, 1, 0)
         iceindex = []
         for i in range(56):
-            iceindex.append(interp.interpolateGridData(icegrid[i], lat, lon, station_lat, station_lon, isGrid=False))
+            iceindex.append(interp.interpolateGridData(icegrid[i], lat, lon, station_lat, station_lon, isGrid=False)[:, np.newaxis])
         iceroad = np.concatenate(iceindex, axis=1)
         return iceroad
 
@@ -35,7 +35,6 @@ class RoadIceindex(object):
         self._cmdata = cmissdata
         self._predata = predata
         print(self._predata.shape)
-
     def iceday(self):
         # dfpre存储一个预测列表
         """
@@ -114,9 +113,9 @@ def main():
     dataset = iceData()
     ice = Roadic()
     icgrid = ice.icegrid(dataset, glovar.lat, glovar.lon)
-    savepath, indexpath = Writefile.readxml(glovar.trafficpath, 4)[2:]        # 此处需进行修改，根据路径
+    savepath, indexpath = Writefile.readxml(glovar.trafficpath, 4)[1:3]        # 此处需进行修改，根据路径
     write(savepath, icgrid, 'IceDepth', glovar.lat, glovar.lon)               # 先保存厚度网格数据
-    iceroad = ice.depth2onezero(icgrid, glovar.lat, glovar.lon
+    iceroad = ice.depth2onezero(icgrid, glovar.lat, glovar.lon) 
     ################################################################################
     # 获取cimiss数据集
     cmissdata = np.loadtxt('/home/cqkj/project/industry/Product/Product/Source/cmsk.csv', delimiter=',')
