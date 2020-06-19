@@ -13,9 +13,9 @@ def snowdepth(path):
     # 6.18测试
     now = Znwg.znwgtime().strftime('%Y%m%d%H')
     pattern = r'(' + now + '.*?.nc)'
-    strings = os.listdir(mkdirdate.path)
+    strings = os.listdir(mkdirdate.dataMdir(path))
     namelist = sorted(Znwg.regex(pattern, strings))
-    os.chdir(r'/home/cqkj/QHTraffic/traffic')
+    os.chdir(mkdirdate.dataMdir(path))
     datasets = xr.open_mfdataset(namelist, concat_dim='time')
     data = datasets.SnowDepth.values
     newdata = []
