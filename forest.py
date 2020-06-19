@@ -5,19 +5,18 @@ import datetime
 import os
 from collections import deque
 import glovar
-from Product.DataInterface import Datainterface
-from Product.Dataprocess import Znwg, Writefile, ecmwf, interp
+from DataInterface import Datainterface
+from Dataprocess import Znwg, Writefile, ecmwf, interp, mkdirdate, insert_update
 
 
 def snowdepth(path):
-    # ??????????????????????(??????????????003?? 006?? 009)??????????
+    # 6.18测试
     now = Znwg.znwgtime().strftime('%Y%m%d%H')
     pattern = r'(' + now + '.*?.nc)'
-    strings = os.listdir(path)
+    strings = os.listdir(mkdirdate.path)
     namelist = sorted(Znwg.regex(pattern, strings))
     os.chdir(r'/home/cqkj/QHTraffic/traffic')
     datasets = xr.open_mfdataset(namelist, concat_dim='time')
-
     data = datasets.SnowDepth.values
     newdata = []
     for i in range(0, 7):
@@ -32,7 +31,7 @@ def snowdepth(path):
 
 
 def landtype(greenpath, forestpath):
-    # ????????????????????????????????
+    # 已测试
     green = xr.open_dataset(greenpath).green.values
     forest = xr.open_dataset(forestpath).forgest.values
     return green, forest
@@ -47,7 +46,7 @@ def liverain(path, pklpath):
     dir = r'/SCMOC/BEXN'
     remote_url = os.path.join(dir, ytd.strftime('%Y'), ytd.strftime('%Y%m%d'))
     grb = Datainterface.GribData()
-    grb.mirror('ER24', remote_url, localdir, '24024', ftp)  # ??????????????
+    grb.mirror('ER24', remote_url, localdir, ftp， freq= '24024')  # ??????????????
     rainpath = sorted(os.listdir(localdir))[-1]
     os.chdir(localdir)
     rainlive, lat, lon, res = Znwg.arrange([grb.readGrib(rainpath, nlat=glovar.latt, nlon=glovar.lonn)][0])
@@ -71,13 +70,13 @@ def Weatherdata(path):
 
     grib = Datainterface.GribData()
     '''
-    [grib.mirror(element, remote_url, localdir, freq, ftp) for element, remote_url in
+    [grib.mirror(element, remote_url, localdir, ftp, freq=freq) for element, remote_url in
      zip(elements[:-1], remote_urls[:-1])]  # ???????????????????????????(24003)
      '''
     for element, remote_url in zip(elements[:-1], remote_urls[:-1]):
-        grib.mirror(element, remote_url, localdir, freq, ftp)
+        grib.mirror(element, remote_url, localdir, ftp, freq=freq)
 
-    grib.mirror(elements[-1], remote_urls[-1], localdir, '24024', ftp)  # ???????????
+    grib.mirror(elements[-1], remote_urls[-1], localdir, ftp,  freq='24024')  # ???????????
     # ?????????????????????????????????????pattern
     strings = ','.join(os.listdir(localdir))
     patterns = [r'(\w+.EDA.*?.GRB2)', r'(\w+.ERH.*?.GRB2)', r'(\w+.TMP.*?.GRB2)', r'(\w+.ER24.*?.GRB2)']
@@ -145,8 +144,6 @@ def firelevel(data, path, snow, landtype):
                                       refertest>=8], [0, 7.692, 11.538, 19.23, 23.076, 26.923,
                                                       30.7, 34.615, 38])
     u = edaindex + tmpindex + erhindex + mindex
-    ###################################################################################
-    # ??????????????????????????????????????, ??????????????????
     rain = np.piecewise(er, [er<0.1, er>=0.1], [0, 1])
     rain = [interp.interpolateGridData(r, glovar.latt, glovar.lonn, glovar.lat, glovar.lon) for r in rain]
     rain = np.nan_to_num(np.array(rain))
@@ -160,13 +157,13 @@ def firelevel(data, path, snow, landtype):
     gindex = np.piecewise(green, [green<=25, (green>25)&(green<51), (green>=51)&(green<73), (green>=73)&(green<91), green>=91], [1,2,3,4,5])
     findex = np.piecewise(forest, [forest <= 25, (forest > 25) & (forest < 51), (forest >= 51) & (forest < 73),
                                   (forest >= 73) & (forest < 91), forest >= 91], [1, 2, 3, 4, 5])
-    mindex = np.maximum(gindex, findex)
+    mindex = np.maximum(gindex, findex)                             # 气象火险m
 
     return gindex, findex, mindex
 
 
 def main():
-    snowpath, gpath, fpath, rainpath, savepath = Writefile.readxml(glovar.forestpath, 0)                       # ???nc??????????
+    snowpath, gpath, fpath, rainpath, fspath, gspath, mspath = Writefile.readxml(glovar.forestpath, 0)                       # ???nc??????????
     snow = snowdepth(snowpath)           # ???????[10, 801, 1381]
     data, *_ = Weatherdata(glovar.forestpath)   # ??????????
     ldtype = landtype(gpath, fpath)
@@ -174,14 +171,13 @@ def main():
     filetime = ecmwf.ecreptime()
     fh = range(10)
     fnames = ['_%03d' % i for i in fh]
-    Writefile.write_to_nc(savepath, gindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='green')
+    Writefile.write_to_nc(gspath, gindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
+                          name='green', elename=None)
+    Writefile.write_to_nc(fspath, findex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
+                          name='forest', elename=None)
 
-    Writefile.write_to_nc(savepath, findex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='forest')
-
-    Writefile.write_to_nc(savepath, mindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='meteo')
+    Writefile.write_to_nc(mspath, mindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
+                          name='meteo', nums= 1, elename='risk')
 if __name__ == '__main__':
     main()
 
