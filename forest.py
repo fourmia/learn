@@ -151,13 +151,13 @@ def main():
     filetime = ecmwf.ecreptime()
     fh = range(10)
     fnames = ['_%03d' % i for i in fh]
-    Writefile.write_to_nc(gspath, gindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='green', elename=None,sql='select ', tablename='fire_forecast', nums=1)
-    Writefile.write_to_nc(fspath, findex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='forest', elename=None, sql='select * from fire_ststion_info', tablename='fire_forecast', nums=1)
+    Writefile.write_to_nc_fire(gspath, gindex, name='green',lat=glovar.lat, lon=glovar.lon, filetime=filetime, fnames=fnames, 
+                          elename=None,nums=1)
+    Writefile.write_to_nc_fire(fspath, findex, name='forest', filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
+                          elename=None, nums=1)
 
-    Writefile.write_to_nc(mspath, mindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='meteo', elename='risk',sql='select * from fire_ststion_info',tablename='fire_forecast', nums=1)
+    Writefile.write_to_nc_fire(mspath, mindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
+                          name='meteo', elename='risk', nums=1)
 if __name__ == '__main__':
     main()
 
