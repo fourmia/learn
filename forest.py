@@ -172,12 +172,12 @@ def main():
     fh = range(10)
     fnames = ['_%03d' % i for i in fh]
     Writefile.write_to_nc(gspath, gindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='green', elename=None)
+                          name='green', elename=None, tablename='fire_forecast')
     Writefile.write_to_nc(fspath, findex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='forest', elename=None)
+                          name='forest', elename=None, tablename='fire_forecast')
 
     Writefile.write_to_nc(mspath, mindex, filetime=filetime, fnames=fnames, lat=glovar.lat, lon=glovar.lon,
-                          name='meteo', nums= 1, elename='risk')
+                          name='meteo', elename='risk', tablename='fire_forecast', nums=1)
 if __name__ == '__main__':
     main()
 
