@@ -43,20 +43,20 @@ def liverain(path, pklpath):
     elements, _, localdir, historydir, freq, *ftp = Writefile.readxml(path, 1)
     now = datetime.datetime.now()
     ytd = now - datetime.timedelta(days=1)
-    dir = r'/SCMOC/BEXN'
-    remote_url = os.path.join(dir, ytd.strftime('%Y'), ytd.strftime('%Y%m%d'))
+    dir = r'//ANALYSIS//CMPA//0P05'
+    remote_url = os.path.join(dir, now.strftime('%Y'), now.strftime('%Y%m%d'))
     grb = Datainterface.GribData()
-    grb.mirror('ER24', remote_url, localdir, ftp， freq= '24024')  # ??????????????
-    rainpath = sorted(os.listdir(localdir))[-1]
+    grb.mirror('FAST_CHN_0P05_DAY-PRE', remote_url, localdir, ftp, freq=None)  # ??????????????
+    rainpaths = sorted(os.listdir(localdir))[-1]
     os.chdir(localdir)
-    rainlive, lat, lon, res = Znwg.arrange([grb.readGrib(rainpath, nlat=glovar.latt, nlon=glovar.lonn)][0])
+    rainlive, lat, lon, res = Znwg.arrange([grb.readGrib(rainpaths, nlat=glovar.latt, nlon=glovar.lonn)][0])
     ####??????????????????
     with open(pklpath, 'rb') as f:
         data = pickle.load(f)
     data.append(rainlive)
     # ????deque????
     with open(pklpath, 'wb') as f:
-        pickle.dump(data, f)
+        pickle.dump(rainlive, f)
     return rainlive
 
 
@@ -67,15 +67,13 @@ def Weatherdata(path):
     elements = elements.split(',')
     subdirs = subdirs.split(',')
     remote_urls = [os.path.join(subdir, now.strftime('%Y'), now.strftime('%Y%m%d')) for subdir in subdirs]  # ??????
-
     grib = Datainterface.GribData()
     '''
     [grib.mirror(element, remote_url, localdir, ftp, freq=freq) for element, remote_url in
      zip(elements[:-1], remote_urls[:-1])]  # ???????????????????????????(24003)
-     '''
+    '''
     for element, remote_url in zip(elements[:-1], remote_urls[:-1]):
         grib.mirror(element, remote_url, localdir, ftp, freq=freq)
-
     grib.mirror(elements[-1], remote_urls[-1], localdir, ftp,  freq='24024')  # ???????????
     # ?????????????????????????????????????pattern
     strings = ','.join(os.listdir(localdir))
@@ -89,25 +87,15 @@ def Weatherdata(path):
     data = np.array([Znwg.arrange(grib.readGrib(path))[0][ele14list] for path in allpath[1:-1]])  # ?????????????????
     #er, lat, lon, size = Znwg.arrange(grib.readGrib(allpath[-1], nlat=glovar.lat, nlon=glovar.lon))  # ???????????????????????????????????????
     er, lat, lon, size = Znwg.arrange([grib.readGrib(allpath[-1], nlat=glovar.latt, nlon=glovar.lonn)][0])
-    result = windu, windv, data, er  # ??????????[4,10,181,277]????
+    result = windu, windv, *data, er  # ??????????[4,10,181,277]????
     return result, lat, lon
 
-
 def firelevel(data, path, snow, landtype):
-    """
-    ????????????
-    :param data: ??????????????????
-    :return: greenfirelevel
-    """
-    ############################################################
-    # ??????????????????????????????????????????pickle
     with open(path, 'rb') as f:
         predq = pickle.load(f)
     preres = np.argmax(np.array(predq)[::-1], axis=0)
     tem = np.add.reduce(predq)
     preres[tem == 0] = 8                       # ?????????
-    ##############################################################
-    # ?????????????????????????????????????????? 0?? ????1??
     *eda, erh, tmp, er = data                   # eda?U??V??????????UV?????????????tmp???????????????????????
     refertest = []
     for i in range(len(er)):
@@ -122,19 +110,15 @@ def firelevel(data, path, snow, landtype):
             # np.piecewise(test, [test < i+1, test >= i+1], [test, lambda x:x+preres])
             test = np.where(test>=i+1, test+preres, test)
         refertest.append(test)
-    #############################################################
-    # ????????????????????????????
-    eda = np.sqrt(eda[0]**2 + eda[1]**2)                                 # ????uv????????????
+    eda = np.sqrt(eda[0]**2 + eda[1]**2)                                
     edaindex = np.piecewise(eda, [(0<=eda)&(eda<1.6), (eda>=1.6)&(eda<3.5), (eda>=3.5)&
                                   (eda<5.6), (eda>=5.6)&(eda<8.1), (eda>=8.1)&(eda<10.9),
                                   (eda >=10.9)&(eda<14),(eda>14)&(eda<=17.2), eda>17.2],
                             [3.846, 7.692, 11.538, 15.382, 19.236, 23.076, 26.923, 30.9])
-
     tmp -= 273.15                                    # ???????????
     tmpindex = np.piecewise(tmp, [tmp<5, (tmp>=5)&(tmp<11), (tmp>=11)&
                                   (tmp<16), (tmp>=16)&(tmp<21), (tmp>=21)&(tmp<=25),
                                   tmp>25], [0, 4.61, 6.1, 9.23, 12.5, 15.384])
-
     erhindex = np.piecewise(erh, [erh>70, (erh>=60)&(erh<=70), (erh>=50)&
                                   (erh<60), (erh>=40)&(erh<50), (erh>=30)&(erh<=40),
                                   erh<30], [0, 3.076, 6.153, 9.23, 12.307, 15.384])
@@ -147,18 +131,14 @@ def firelevel(data, path, snow, landtype):
     rain = np.piecewise(er, [er<0.1, er>=0.1], [0, 1])
     rain = [interp.interpolateGridData(r, glovar.latt, glovar.lonn, glovar.lat, glovar.lon) for r in rain]
     rain = np.nan_to_num(np.array(rain))
-
     u = [interp.interpolateGridData(u_, glovar.latt, glovar.lonn, glovar.lat, glovar.lon) for u_ in u]
     u = np.nan_to_num(np.array(u))
     green = u*landtype[0]*rain*snow                                 #  ?????????
     forest = u*landtype[1]*rain*snow                                #  ????????
-    ###################################################################################
-    # ????????????????????
     gindex = np.piecewise(green, [green<=25, (green>25)&(green<51), (green>=51)&(green<73), (green>=73)&(green<91), green>=91], [1,2,3,4,5])
     findex = np.piecewise(forest, [forest <= 25, (forest > 25) & (forest < 51), (forest >= 51) & (forest < 73),
                                   (forest >= 73) & (forest < 91), forest >= 91], [1, 2, 3, 4, 5])
     mindex = np.maximum(gindex, findex)                             # 气象火险m
-
     return gindex, findex, mindex
 
 
