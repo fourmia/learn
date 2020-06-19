@@ -80,12 +80,11 @@ class RoadIceindex(object):
 def write(path, data, name, lat=None, lon=None, type=0):
     filetime = ecmwf.ecreptime()
     fh = range(3, 169, 3)
-    fnames = ['%03d' % i for i in fh]
+    fnames = ['_%03d' % i for i in fh]
     if type == 0:
         Writefile.write_to_nc(path, data, lat, lon, name, fnames, filetime, 'ice')
     else:
-        Writefile.write_to_csv(path, data, name, fnames, filetime)
-
+        Writefile.write_to_csv(path, data, name, fnames, filetime, 'road_ice')
 def iceData():
     # 获取ec数据信息(气温、降水、地温、湿度、积雪深度)
     ectime = ecmwf.ecreptime()
